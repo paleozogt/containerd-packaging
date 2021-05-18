@@ -26,6 +26,6 @@ GOLANG_IMAGE=golang:$(GOVERSION)
 ifeq ($(OS),Windows_NT)
        GOLANG_IMAGE=docker.io/library/golang:$(GOVERSION)
 else
-       GOLANG_IMAGE=docker.io/library/golang:$(GOVERSION)-buster
+       GOLANG_IMAGE=docker.io/paleozogt/golang:$(GOVERSION)-sid
 endif
 GOARCH=$(shell docker run --rm $(GOLANG_IMAGE) go env GOARCH 2>/dev/null)

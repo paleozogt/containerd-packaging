@@ -14,7 +14,7 @@
 
 include common/common.mk
 
-BUILD_IMAGE=centos:7
+BUILD_IMAGE=paleozogt/centos:7
 BUILD_TYPE=$(shell ./scripts/deb-or-rpm $(BUILD_IMAGE))
 BUILD_BASE=$(shell ./scripts/determine-base $(BUILD_IMAGE))
 
@@ -75,6 +75,7 @@ docker.io/%:
 checkout: src
 	./scripts/checkout.sh src/github.com/containerd/containerd "$(REF)"
 	./scripts/checkout.sh src/github.com/opencontainers/runc "$(RUNC_REF)"
+	cd src/github.com/containerd/containerd && git apply ../../../../containerd.patch
 
 .PHONY: build
 build: checkout common/containerd.service

@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=paleozogt/docker_dockerfile:experimental
 
 
 #   Copyright 2018-2020 Docker Inc.
@@ -15,9 +15,9 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-ARG BUILD_IMAGE=centos:7
+ARG BUILD_IMAGE=paleozogt/centos:7
 ARG BASE=centos
-ARG GOLANG_IMAGE=golang:latest
+ARG GOLANG_IMAGE=paleozogt/golang:latest
 
 # Install golang from the official image, since the package managed
 # one probably is too old and ppa's don't cover all distros
@@ -88,6 +88,13 @@ RUN --mount=type=bind,from=golang,source=/usr/local/go/,target=/usr/local/go/ \
     --mount=type=bind,source=/src/github.com/containerd/containerd,target=/root/rpmbuild/SOURCES/containerd \
     --mount=type=bind,source=/src/github.com/opencontainers/runc,target=/root/rpmbuild/SOURCES/runc \
     /root/build-rpm
+RUN yum install -y wget
+RUN . /etc/os-release \
+ && export DIST_ID="$(. /etc/os-release; echo "${ID}")" \
+ && export DIST_VERSION="$(. /etc/os-release; echo "${VERSION_ID}" | cut -d'.' -f1)" \
+ && export ARCH="$(uname -m)" \
+ && cd /build/${DIST_ID}/${DIST_VERSION}/${ARCH} \
+ && wget http://mirror.keystealth.org/centos/7.9.2009/extras/x86_64/Packages/container-selinux-2.119.2-1.911c772.el7_8.noarch.rpm
 ARG UID=0
 ARG GID=0
 RUN chown -R ${UID}:${GID} /archive /build
