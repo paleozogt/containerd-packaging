@@ -75,7 +75,8 @@ docker.io/%:
 checkout: src
 	./scripts/checkout.sh src/github.com/containerd/containerd "$(REF)"
 	./scripts/checkout.sh src/github.com/opencontainers/runc "$(RUNC_REF)"
-	cd src/github.com/containerd/containerd && git apply ../../../../containerd.patch
+	cd src/github.com/containerd/containerd && sed -i 's/-buildmode=pie//g' Makefile.linux
+	cd src/github.com/opencontainers/runc && sed -i 's/-buildmode=pie//g' Makefile
 
 .PHONY: build
 build: checkout common/containerd.service
