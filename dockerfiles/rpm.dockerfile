@@ -30,6 +30,13 @@ ARG MD2MAN_VERSION=v2.0.0
 RUN go get github.com/cpuguy83/go-md2man/v2/@${MD2MAN_VERSION}
 
 FROM ${BUILD_IMAGE} AS redhat-base
+
+# fix yum for containers
+ARG YUM_REPO_ARG="--disablerepo='*' --enablerepo=base"
+RUN yum $YUM_REPO_ARG install -y yum-plugin-ovl
+RUN yum $YUM_REPO_ARG install -y yum-utils \
+ || yum $YUM_REPO_ARG install -y yum-utils
+
 RUN yum install -y yum-utils rpm-build git
 
 FROM redhat-base AS rhel-base
